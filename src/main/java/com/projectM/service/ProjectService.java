@@ -19,6 +19,8 @@ public interface ProjectService {
 
     Project updateProject(Project updatedProject, Long id) throws Exception;
 
+    List<Project> searchProjects(String keyword, User user) throws Exception;
+
     void addUserToProject(Long userId, Long projectId) throws Exception;
 
     void removeUserFromProject(Long userId, Long projectId) throws Exception;
