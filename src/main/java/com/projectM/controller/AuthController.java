@@ -49,7 +49,7 @@ public class AuthController {
             createdUser.setPassword(hashedPwd);
             createdUser.setEmail(email);
             createdUser.setFull_name(user.getFull_name());
-            User savedUser = userRepository.save(createdUser);
+            userRepository.save(createdUser);
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -95,5 +95,6 @@ public class AuthController {
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails,null);
+
     }
 }
