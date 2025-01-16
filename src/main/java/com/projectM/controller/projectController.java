@@ -1,8 +1,13 @@
 package com.projectM.controller;
 
+import com.projectM.model.Chat;
+import com.projectM.model.Invitation;
 import com.projectM.model.Project;
 import com.projectM.model.User;
+import com.projectM.request.InvitationRequest;
 import com.projectM.response.MessageResponse;
+import com.projectM.service.EmailService;
+import com.projectM.service.InvitationService;
 import com.projectM.service.ProjectService;
 import com.projectM.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +28,9 @@ public class projectController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private InvitationService invitationService;
 
     @GetMapping
     public ResponseEntity<List<Project>> getProjects(
@@ -72,7 +80,7 @@ public class projectController {
     }
 
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<MessageResponse> deleteMapping(
+    public ResponseEntity<MessageResponse> deleteProject(
             @PathVariable Long projectId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
@@ -84,7 +92,7 @@ public class projectController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-
+    @GetMapping("/search")
     public ResponseEntity<List<Project>> searchProjects(
             @RequestParam String keyword,
             @RequestHeader("Authorization") String jwt
@@ -94,5 +102,55 @@ public class projectController {
 
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
+
+    @GetMapping("/{projectId}/chat")
+    public ResponseEntity<Chat> getChatByProjectId(
+            @PathVariable Long projectId,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        userService.findUserProfileByJwt(jwt);
+        Chat chat = projectService.getChatByProjectId(projectId);
+
+        return new ResponseEntity<>(chat, HttpStatus.OK);
+    }
+
+    @PostMapping("/invite")
+    public ResponseEntity<MessageResponse> inviteProject(
+            @RequestBody InvitationRequest invitationRequest,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        userService.findUserProfileByJwt(jwt);
+        invitationService.sendInvitation(invitationRequest.getUserEmail(), invitationRequest.getProjectId());
+        MessageResponse res = new MessageResponse("invitation sent successfully");
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/accept_invitation")
+    public ResponseEntity<Invitation> acceptProjectInvitation(
+            @RequestParam String token,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        User user = userService.findUserProfileByJwt(jwt);
+        Invitation invitation = invitationService.acceptInvitation(token);
+        projectService.addUserToProject(user.getId(), invitation.getProjectId());
+
+        return new ResponseEntity<>(invitation, HttpStatus.ACCEPTED);
+    }
+
+//    @DeleteMapping("/remove_user")
+//    public ResponseEntity<MessageResponse> removeUserFromProject(
+//            @RequestParam Long projectId,
+//            @RequestParam Long userId,
+//            @RequestHeader("Authorization") String jwt
+//    ) throws Exception {
+//        userService.findUserProfileByJwt(jwt);
+//        projectService.removeUserFromProject(userId,projectId);
+//        MessageResponse res = new MessageResponse("user removed from the project");
+//
+//        return new ResponseEntity<>(res, HttpStatus.OK);
+//    }
+
 
 }
