@@ -6,6 +6,7 @@ import com.projectM.repository.UserRepository;
 import com.projectM.request.LoginRequest;
 import com.projectM.response.AuthResponse;
 import com.projectM.service.CustomUserDetailsService;
+import com.projectM.service.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
+    @Autowired
+    private SubscriptionService subscriptionService;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -42,6 +47,8 @@ public class AuthController {
             throw new Exception("email already exists!");
         }else {
 
+
+
             User createdUser = new User();
             String pwd = user.getPassword();
             String hashedPwd = passwordEncoder.encode(pwd);
@@ -50,6 +57,8 @@ public class AuthController {
             createdUser.setEmail(email);
             createdUser.setFull_name(user.getFull_name());
             userRepository.save(createdUser);
+
+            subscriptionService.createSubscription(createdUser);
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
             SecurityContextHolder.getContext().setAuthentication(authentication);
