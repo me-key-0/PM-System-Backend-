@@ -20,7 +20,6 @@ public class Issue {
     private String description;
     private String status;
     private String priority;
-    private Long projectId;
     private LocalDate dueDate;
     private List<String> tags = new ArrayList<>();
 

@@ -1,6 +1,8 @@
 package com.projectM.config;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
@@ -13,13 +15,17 @@ public class JwtProvider {
 
     public static String generateToken(Authentication auth) {
         return Jwts.builder().setIssuedAt(new Date())
+                .setSubject(auth.getName())
                 .setExpiration(new Date(new Date().getTime() + 86400000))
                 .claim("email", auth.getName())
                 .signWith(key)
                 .compact();
     }
     public static String getEmailFromToken(String jwt ) {
-        Claims claims = Jwts.parser().decryptWith(key).build().parseSignedClaims(jwt).getPayload();
+
+        JwtParser parser = Jwts.parser().setSigningKey(key).build();
+        Jws<Claims> jws = parser.parseSignedClaims(jwt.trim());
+        Claims claims = jws.getPayload();
 
         return String.valueOf(claims.get("email"));
     }

@@ -39,6 +39,9 @@ public class projectController {
             @RequestHeader("Authorization") String jwt
 
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
         List<Project> projects = projectService.getProjectByTeam(user,category,tag);
 
@@ -51,6 +54,9 @@ public class projectController {
             @RequestHeader("Authorization") String jwt
             )
             throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         userService.findUserProfileByJwt(jwt);  // throws an error from (findUserByEmail) if user not found
         Project project = projectService.getProjectById(projectId);
         return new ResponseEntity<>(project, HttpStatus.OK);
@@ -61,6 +67,9 @@ public class projectController {
             @RequestBody Project project,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
         Project createdProject = projectService.createProject(project, user);
 
@@ -73,6 +82,9 @@ public class projectController {
             @RequestBody Project project,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         userService.findUserProfileByJwt(jwt);
         Project updatedProject = projectService.updateProject(project, projectId);
 
@@ -84,6 +96,9 @@ public class projectController {
             @PathVariable Long projectId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
         Long userId = user.getId();
         projectService.deleteProject(projectId, userId);
@@ -97,6 +112,9 @@ public class projectController {
             @RequestParam String keyword,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
         List<Project> projects = projectService.searchProjects(keyword,user);
 
@@ -108,6 +126,9 @@ public class projectController {
             @PathVariable Long projectId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         userService.findUserProfileByJwt(jwt);
         Chat chat = projectService.getChatByProjectId(projectId);
 
@@ -119,6 +140,9 @@ public class projectController {
             @RequestBody InvitationRequest invitationRequest,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         userService.findUserProfileByJwt(jwt);
         invitationService.sendInvitation(invitationRequest.getUserEmail(), invitationRequest.getProjectId());
         MessageResponse res = new MessageResponse("invitation sent successfully");
@@ -132,6 +156,9 @@ public class projectController {
             @RequestParam String token,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
         Invitation invitation = invitationService.acceptInvitation(token);
         projectService.addUserToProject(user.getId(), invitation.getProjectId());
