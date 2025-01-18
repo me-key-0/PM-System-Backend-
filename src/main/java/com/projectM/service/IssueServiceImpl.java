@@ -42,6 +42,13 @@ public class IssueServiceImpl implements IssueService {
     public Issue createIssue(IssueRequest issue, User user) throws Exception {
         Project project = projectService.getProjectById(issue.getProjectId());
 
+        // Check if the user is member of the group to create an issue
+        List<User> team = project.getTeam();
+        if(!team.contains(user)) {
+            throw new Exception("user is not in the team");
+        }
+
+        // create the issue
         Issue newIssue = new Issue();
 
         newIssue.setTitle(issue.getTitle());

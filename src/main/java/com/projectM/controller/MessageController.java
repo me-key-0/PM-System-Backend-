@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/message")
+@RequestMapping("/api/messages")
 public class MessageController {
 
     @Autowired
@@ -33,6 +33,9 @@ public class MessageController {
             @RequestBody CreateMessageRequest req,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User sender = userService.findUserProfileByJwt(jwt);
 
         Chat chat = projectService.getChatByProjectId(req.getProjectId());
@@ -50,6 +53,9 @@ public class MessageController {
             @PathVariable Long projectId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         userService.findUserProfileByJwt(jwt);
 
         return ResponseEntity.ok(messageService.getMessageByProjectId(projectId));

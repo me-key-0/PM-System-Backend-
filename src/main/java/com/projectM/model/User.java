@@ -24,9 +24,9 @@ public class User {
     @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
     private List<Issue> assignedIssue = new ArrayList<Issue>();
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-//    private List<Message> messages = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<Message> messages = new ArrayList<>();
 //
 //    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
 //    private List<Chat> chat = new ArrayList<>();

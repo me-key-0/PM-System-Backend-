@@ -27,6 +27,9 @@ public class CommentController {
             @PathVariable Long issueId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception{
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         userService.findUserProfileByJwt(jwt);
 
         return ResponseEntity.ok(commentService.getCommentByIssueId(issueId));
@@ -38,6 +41,9 @@ public class CommentController {
             @RequestBody CreateCommentRequest req,
             @RequestHeader("Authorization") String jwt
     ) throws Exception{
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
 
 
@@ -50,6 +56,9 @@ public class CommentController {
             @PathVariable Long commentId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception{
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
         commentService.deleteComment(commentId, user.getId());
 

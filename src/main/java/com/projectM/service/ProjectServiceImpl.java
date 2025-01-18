@@ -38,7 +38,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         Chat chat = new Chat();
         chat.setProject(savedProject);  // set's the relationShip with the prj. (stores the prj-id as a foreign key)
-
         Chat savedChat = chatService.createChat(chat);
         // we don't need the chat instance to be stored in prj-table, because they already are related with the foreign key referring to the prj's id
         savedProject.setChat(savedChat);

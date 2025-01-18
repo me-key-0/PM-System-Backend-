@@ -20,6 +20,7 @@ public class CommentServiceImpl implements CommentService{
     @Autowired
     private IssueService issueService;
 
+    @Autowired
     private UserService userService;
 
     @Override

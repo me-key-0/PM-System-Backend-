@@ -28,6 +28,9 @@ public class IssueController {
             @PathVariable Long issueId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         userService.findUserProfileByJwt(jwt);
 
         return ResponseEntity.ok(issueService.getIssueById(issueId));
@@ -39,6 +42,9 @@ public class IssueController {
             @PathVariable Long projectId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         userService.findUserProfileByJwt(jwt);
 
         return ResponseEntity.ok(issueService.getIssueByProjectId(projectId));
@@ -50,6 +56,9 @@ public class IssueController {
             @RequestBody IssueRequest issue,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
         Issue newIssue = issueService.createIssue(issue,user);
 
@@ -62,6 +71,9 @@ public class IssueController {
             @PathVariable Long issueId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User assignee = userService.findUserProfileByJwt(jwt);
         issueService.deleteIssue(issueId, assignee.getId());
 
@@ -71,24 +83,30 @@ public class IssueController {
     }
 
 
-    @PutMapping("/{issueId}/assignee/{assigneeId}")
+    @PutMapping("/{issueId}")
     public ResponseEntity<Issue> addUserToIssue(
             @PathVariable Long issueId,
-            @PathVariable Long assigneeId,
+            @RequestParam Long assigneeId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         userService.findUserProfileByJwt(jwt);
 
         return ResponseEntity.ok(issueService.addUserToIssue(issueId, assigneeId));
     }
 
 
-    @PatchMapping("/{issueId}/status/{status}")
+    @PatchMapping("/{issueId}")
     public ResponseEntity<Issue> updateStatus(
             @PathVariable Long issueId,
             @RequestParam String status,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         userService.findUserProfileByJwt(jwt);
 
         return ResponseEntity.ok(issueService.updateStatus(issueId,status));

@@ -19,10 +19,13 @@ public class SubscriptionController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Subscription> getSubscription(
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
 
         return ResponseEntity.ok(subscriptionService.getUserSubscription(user.getId()));
@@ -33,6 +36,9 @@ public class SubscriptionController {
             @RequestParam PlanType planType,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
 
         return ResponseEntity.ok(subscriptionService.upgradeSubscription(user.getId(), planType));
